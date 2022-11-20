@@ -9,11 +9,10 @@ export class Enviorment {
 
         // PerspectiveCamera is te most used one (There is a lot of cameras). Because represent human eye
         // params = (Field of view, aspect ratio (user window), view frustum)
-        this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000);
-        this.camera.rotation.y = 45/180*Math.PI;
-        this.camera.position.x = 800;
-        this.camera.position.y = 100;
-        this.camera.position.z = 1000;
+        this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.rotation.set(-0.356,0 ,0);
+        this.camera.position.set(27, 25, 32);
+        console.log(this.camera)
         
         // Render the scece in the element that you want. In our case is a canvas
         this.renderer =  new THREE.WebGLRenderer({
@@ -23,17 +22,14 @@ export class Enviorment {
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
-        //position the camera in the scene
-        this.camera.position.setZ(30);
-        
         // Controls to move in the scene
-        this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+        // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
         
         
         // pointLightHelper to know where is the light source
         this.gridHelper = new THREE.GridHelper(200, 50);
         this.axisHelper = new THREE.AxesHelper(20);
-        this.scene.add( this.gridHelper, this.axisHelper );
+        // this.scene.add( this.gridHelper, this.axisHelper );
         
         // const pointLightHelper = new THREE.pointLightHelper( camera, renderer.domElement );
 
@@ -44,10 +40,10 @@ export class Enviorment {
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        this.hlight = new THREE.AmbientLight (0x404040,1);
+        this.hlight = new THREE.AmbientLight (0x404040,0.5);
         this.scene.add(this.hlight);
 
-        this.directionalLight = new THREE.DirectionalLight(0xffffff,1);
+        this.directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
         this.directionalLight.position.set(0,1,0);
         this.directionalLight.castShadow = true;
         this.scene.add(this.directionalLight);
@@ -74,5 +70,15 @@ export class Enviorment {
 
     getScene() {
         return this.scene;
+    }
+
+    getCamera() {
+        return this.camera;
+    }
+    getRender() {
+        return this.renderer;
+    }
+    getControls() {
+        return this.controls;
     }
 }
