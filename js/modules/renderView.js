@@ -11,7 +11,7 @@ export class renderView {
         var myView;
         switch (myExpresion) {
             case 'draw':
-                myView = `<canvas id="draw-canvas"></canvas>`;
+                myView = `<canvas id="draw-canvas"></canvas><button id="btndownload">Download</button>`;
                 this.logicExpresion = 'draw';
                 break;
 
@@ -49,6 +49,8 @@ export class renderView {
             case 'draw':
                 const canvas = document.getElementById('draw-canvas');
                 const ctx = canvas.getContext('2d');
+                ctx.fillStyle = "white";
+                const button = document.getElementById("btndownload")
 
 
                 const canvasOffsetX = canvas.offsetLeft;
@@ -78,6 +80,50 @@ export class renderView {
                         ctx.stroke();
                     }
                 })
+
+                button.addEventListener('click', (e)=> {
+                    const img = new Image(1000, 1000);
+                    const dataURL = canvas.toDataURL();
+                    const fullQuality = canvas.toDataURL('image/png', 1.0);
+                    img.src = fullQuality;
+                    console.log(dataURL);
+                    document.body.appendChild(img);
+
+
+                    // Function download IMG
+                    var a = document.createElement('a');
+                    a.href = img.src;
+                    a.download = "draw.png";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+
+                    postData("http://localhost:3000/save-painting", img)
+                    
+
+                })
+
+
+                async function postData(url = '', imageFile) {
+                    const formData = new FormData();
+                    formData.append("IdDibujo", 1);
+                    formData.append("NombreDibujo", "casa")
+                    formData.append("IdUser", 1);
+                    formData.append("myFile", imageFile)
+
+                    const response = await fetch(url, {
+                        method: 'POST', 
+                        body: formData,
+                        headers: {'Accept': 'multipart/form-data'},
+
+                    });
+                        return response.json(); // parses JSON response into native JavaScript objects
+                    }
+
+
             break;
         }
     }

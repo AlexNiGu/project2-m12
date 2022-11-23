@@ -31,8 +31,8 @@ export class AppController {
         this.#camera = this.#myEnviorment.getCamera();
         this.#render = this.#myEnviorment.getRender();
         this.#controls = this.#myEnviorment.getControls();
-        this.loadElements("../../media/casa1.glb");
-        this.loadElements('../../media/Duckdoc.glb', 26,12,10, true);
+        this.loadElements('../media/casa1.glb');
+        this.loadElements('../media/Duckdoc.glb', 26,12,10, true);
     }
 
 
