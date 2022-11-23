@@ -15,17 +15,18 @@ export class AppController {
     #myKeyControls;
     model;
     houseEnviorment;
-    // buttonDraw = document.getElementById("draw");
-    // buttonConversation = document.getElementById("conversation");
-    // buttonPlay = document.getElementById("play");
+
     drawUI;
     conversationUI;
     #myRender;
+    renderUIActivate = true;
 
 
-    constructor() {
+    constructor(uiRoot) {
+        this.UIRoot = uiRoot;
         this.#myEnviorment = new Enviorment();
         this.#myRender = new renderView();
+        this.view = this.#myRender.render();
         this.#scene = this.#myEnviorment.getScene();
         this.#camera = this.#myEnviorment.getCamera();
         this.#render = this.#myEnviorment.getRender();
@@ -36,7 +37,9 @@ export class AppController {
 
 
     draw() {
-        this.#render.render(this.#scene, this.#camera)
+        this.#render.render(this.#scene, this.#camera);
+        this.renderUI(this.renderUIActivate);
+        this.renderUIActivate = false;
     }
 
 
@@ -54,19 +57,17 @@ export class AppController {
 
         // It will turn into a swicth
         if (this.drawUI == true) {
-            this.#myRender.render('draw');
             this.model.position.x -=0.05;
-            this.model.rotation.z -=0.05;
+            // this.model.rotation.z -=0.05;
             this.#camera.position.x -= 0.01;
-            this.#camera.rotation.x -= 0.01;
+            // this.#camera.rotation.x -= 0.01;
 
         }
         if (this.conversationUI == true) {
-            this.#myRender.render('draw');
             this.model.position.x +=0.05;
             this.model.rotation.z +=0.05;
             this.#camera.position.x += 0.01;
-            this.#camera.rotation.x += 0.01;
+            // this.#camera.rotation.x += 0.01;
         }
     }
     
@@ -110,15 +111,40 @@ export class AppController {
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    activeDrawUI() {
-        this.drawUI = true;
-        this.conversationUI = false;
+    renderUI() {
+        if (this.renderUIActivate == true) {
+            this.UIRoot.innerHTML = this.view;
+            document.getElementById("game").addEventListener('click', ()=> {
+                this.drawUI = true;
+                this.conversationUI = false;
+
+            });
+            document.getElementById("conversation").addEventListener('click', ()=> {
+                this.conversationUI = true;
+                this.drawUI = false;
+            });
+            document.getElementById("draw").addEventListener('click', ()=> {
+                this.view = this.#myRender.render('draw');
+                // this.drawUI();
+                this.UIRoot.innerHTML += this.view;
+                var bol = false;
+                this.#myRender.drawLogic('draw');
+                // if (bol == true) {
+                //     canvas.style.display = "none";
+                //         bol = false;
+                // }else {
+                //     canvas.style.display = "block";
+                //     bol = true;
+                // }
+            });
+        }
     }
 
-    activeConersationUI() {
-        this.conversationUI = true;
-        this.drawUI = false;
+    drawUI() {
+        this.UIRoot.innerHTML += this.view;
     }
+    
 }
 
