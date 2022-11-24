@@ -49,7 +49,7 @@ export class renderView {
             case 'draw':
                 const canvas = document.getElementById('draw-canvas');
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = "white";
+                ctx.fillStyle = "black";
                 const button = document.getElementById("btndownload")
 
 
@@ -81,47 +81,64 @@ export class renderView {
                     }
                 })
 
-                button.addEventListener('click', (e)=> {
+                button.addEventListener('click', async (e)=> {
                     const img = new Image(1000, 1000);
                     const dataURL = canvas.toDataURL();
                     const fullQuality = canvas.toDataURL('image/png', 1.0);
                     img.src = fullQuality;
-                    console.log(dataURL);
-                    document.body.appendChild(img);
+                    // console.log(fullQuality)
+
+                    // const file = new FileReader();
+                    // file.onload = function () {
+                    //     document.querySelector(img).src = file.result;
+                    // }
+                    // file.readAsDataURL(files[0]);
+                    // console.log(dataURL);
+                    // document.body.appendChild(img);
 
 
                     // Function download IMG
-                    var a = document.createElement('a');
-                    a.href = img.src;
-                    a.download = "draw.png";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    // var a = document.createElement('a');
+                    // a.href = img.src;
+                    // a.download = "draw.png";
+                    // console.log(a);
+                    // document.body.appendChild(a);
+                    // a.click();
+                    // document.body.removeChild(a);
 
+                    // const array = [img.outerHTML];
+                    // const blob = new Blob(array, { type: "text/html" })
 
-                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    // const file = new FileList();
 
-                    postData("http://localhost:3000/save-painting", img)
+                    console.log(typeof img.src);
+
+                    const formData = new FormData()
+                    // formData.append('pregunta',pregunta.value)
+                    formData.append('IdDibujo', 1)
+                    formData.append('NombreDibujo','casa')
+                    
+                    formData.append('IdUser',1)
+                    formData.append('MyFile',img.src)
+                
+                
+                    console.log(formData)
+                
+                
+                
+                    const options = {
+                        method: 'post',
+                        body: formData ,//cambair stringfy
+                        headers : {'Accept': 'multipart/form-data'},
+                    }
+                  
+                    await fetch('http://localhost:3000/save-painting',options).then(res=>res.json()).then(response=>console.log(response))
                     
 
                 })
 
-
-                async function postData(url = '', imageFile) {
-                    const formData = new FormData();
-                    formData.append("IdDibujo", 1);
-                    formData.append("NombreDibujo", "casa")
-                    formData.append("IdUser", 1);
-                    formData.append("myFile", imageFile)
-
-                    const response = await fetch(url, {
-                        method: 'POST', 
-                        body: formData,
-                        headers: {'Accept': 'multipart/form-data'},
-
-                    });
-                        return response.json(); // parses JSON response into native JavaScript objects
-                    }
+                        // return response.json(); // parses JSON response into native JavaScript objects
+                    
 
 
             break;
