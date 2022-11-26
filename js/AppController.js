@@ -5,6 +5,7 @@ import { renderView } from "./modules/renderView.js";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js';
 import * as THREE from 'three';
 
+
 export class AppController {
 
     #myEnviorment;
@@ -20,6 +21,7 @@ export class AppController {
     conversationUI;
     #myRender;
     renderUIActivate = true;
+    i = 0
 
 
     constructor(uiRoot) {
@@ -64,10 +66,11 @@ export class AppController {
 
         }
         if (this.conversationUI == true) {
-            this.model.position.x +=0.05;
-            this.model.rotation.z +=0.05;
-            this.#camera.position.x += 0.01;
+            // this.model.position.x +=0.05;
+            // this.model.rotation.z +=0.05;
+            // this.#camera.position.x += 0.01;
             // this.#camera.rotation.x += 0.01;
+            
         }
     }
     
@@ -119,13 +122,18 @@ export class AppController {
             document.getElementById("game").addEventListener('click', ()=> {
                 this.drawUI = true;
                 this.conversationUI = false;
-
+                
+                
             });
             document.getElementById("conversation").addEventListener('click', ()=> {
                 this.conversationUI = true;
                 this.drawUI = false;
+                this.fetchGetConversation()
             });
             document.getElementById("draw").addEventListener('click', ()=> {
+
+                this.fetchGetPaiting()
+
                 this.view = this.#myRender.render('draw');
                 // this.drawUI();
                 this.UIRoot.innerHTML += this.view;
@@ -146,5 +154,46 @@ export class AppController {
         this.UIRoot.innerHTML += this.view;
     }
     
+
+
+    async fetchGetConversation(){
+
+        const idTest = await JSON.parse(localStorage.getItem('user'))
+
+        var cuerpo = {
+            IdTest:idTest.Numtest
+        }
+        var options = {
+            method:'post',
+            body:JSON.stringify(cuerpo),
+            headers:{"Content-Type":"application/json"}
+        }
+
+        await fetch('http://localhost:3000/conversation-init',options)
+        .then(res=>res.json())
+        .then(response=>console.log(response))
+
+    }
+
+
+    async fetchGetPaiting(){
+
+        const idPaint = await JSON.parse(localStorage.getItem('user'))
+
+        var cuerpo = {
+            IdDibujo:idPaint.Numdibujos
+        }
+
+        var options = {
+            method:'post',
+            body:JSON.stringify(cuerpo),
+            headers:{"Content-Type":"application/json"}
+        }
+
+
+        await fetch('http://localhost:3000/painting-init',options)
+        .then(res=>res.json())
+        .then(response=>localStorage.setItem('paint',JSON.stringify(response)))
+    }
 }
 

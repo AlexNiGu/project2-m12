@@ -1,5 +1,6 @@
 import { AppController } from './AppController.js';
 
+var myAppControl = {}
 
 const container = document.getElementById('container')
 
@@ -7,19 +8,19 @@ localStorage.getItem('token') == 'yes'? renderCanvas(): startLogin()
 /**LOGIN */
 
 function startLogin() {
+
     const buttonLogin = document.getElementById('button-login')
-    const user = document.getElementById('user').value
-    const password = document.getElementById('password').value
-
-    var cuerpo = {
-        "Nombre": user,
-        "Password": password
-    }
-
-    console.log(JSON.stringify(cuerpo))
 
     buttonLogin.addEventListener('click', async () => {
 
+        
+        const user = document.getElementById('user').value
+        const password = document.getElementById('password').value
+    
+        var cuerpo = {
+            "Nombre": user,
+            "Password": password
+        }
 
         var options = {
             method: 'post',
@@ -35,12 +36,10 @@ function startLogin() {
             .then(response => response.error ?
                 mensajeError(response) :
                 saveData(response),
-                // animate()
             )
 
-
-
     })
+    
     function mensajeError(response) {
         alert(response.error)
     }
@@ -56,6 +55,7 @@ function startLogin() {
 
 
 function renderCanvas(){
+    fetchGetInfoUser()
     const body = document.getElementById('body')
     const div = document.createElement('div')
     div.id = 'root-ui'
@@ -64,13 +64,31 @@ function renderCanvas(){
     body.removeChild(container)
     body.insertBefore(div, body.childNodes[0])
     body.insertBefore(canvas, body.childNodes[1])
+
+    var uiRoot = document.getElementById('root-ui');
+    myAppControl = new AppController(uiRoot);
     animate()
 }
 
 function animate() {
-    var uiRoot = document.getElementById('root-ui');
-    var myAppControl = new AppController(uiRoot);
     myAppControl.draw();
     myAppControl.update();
-    // requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
+}
+
+
+async function fetchGetInfoUser(){
+    var options = {
+        method: 'post',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: localStorage.getItem('user')
+    }
+
+    await fetch('http://localhost:3000/ini', options)
+        .then(res => res.json())
+        .then(response=>localStorage.setItem('user',JSON.stringify(response)))
+        
 }

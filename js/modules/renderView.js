@@ -5,8 +5,6 @@ export class renderView {
     constructor() {
 
     }
-
-
     render(myExpresion) {
         var myView;
         switch (myExpresion) {
@@ -113,12 +111,13 @@ export class renderView {
 
                     console.log(typeof img.src);
 
+                    const paint = JSON.parse(localStorage.getItem('paint'))
+                    const user = JSON.parse(localStorage.getItem('user'))
                     const formData = new FormData()
                     // formData.append('pregunta',pregunta.value)
-                    formData.append('IdDibujo', 1)
-                    formData.append('NombreDibujo','casa')
-                    
-                    formData.append('IdUser',1)
+                    formData.append('IdDibujo', paint.IdDibujo)
+                    formData.append('NombreDibujo',paint.Nombre)
+                    formData.append('IdUser',user.IdUser)
                     formData.append('MyFile',img.src)
                 
                 
