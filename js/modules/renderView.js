@@ -113,10 +113,12 @@ export class renderView {
 
                     const paint = JSON.parse(localStorage.getItem('paint'))
                     const user = JSON.parse(localStorage.getItem('user'))
+                    console.log(paint);
                     const formData = new FormData()
+
                     // formData.append('pregunta',pregunta.value)
-                    formData.append('IdDibujo', paint.IdDibujo)
-                    formData.append('NombreDibujo',paint.Nombre)
+                    formData.append('IdDibujo', paint[0].IdDibujo)
+                    formData.append('NombreDibujo',paint[0].Tipo)
                     formData.append('IdUser',user.IdUser)
                     formData.append('MyFile',img.src)
                 

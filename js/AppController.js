@@ -1,7 +1,7 @@
 import { Enviorment } from "./modules/Enviorment.js";
 import  *  as keyControls from "./modules/KeyControls.js";
 import { renderView } from "./modules/renderView.js";
-
+import Shop from "../shop/shop.js";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/GLTFLoader.js';
 import * as THREE from 'three';
 
@@ -33,8 +33,9 @@ export class AppController {
         this.#camera = this.#myEnviorment.getCamera();
         this.#render = this.#myEnviorment.getRender();
         this.#controls = this.#myEnviorment.getControls();
+        this.shop = new Shop()
         this.loadElements('../media/casa1.glb');
-        this.loadElements('../media/Duckdoc.glb', 26,12,10, true);
+        this.loadElements('https://res.cloudinary.com/eloy411/image/upload/v1669653667/Duckdoc_xzayat.glb', 26,12,10, true);
     }
 
 
@@ -146,6 +147,11 @@ export class AppController {
                 //     canvas.style.display = "block";
                 //     bol = true;
                 // }
+            })
+            document.getElementById('shop').addEventListener('click',()=>{
+
+               this.shop.getFurnitures()
+
             });
         }
     }
@@ -178,6 +184,7 @@ export class AppController {
 
     async fetchGetPaiting(){
 
+        console.log('hola has entrado en painting')
         const idPaint = await JSON.parse(localStorage.getItem('user'))
 
         var cuerpo = {

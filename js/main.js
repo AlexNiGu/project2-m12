@@ -1,4 +1,6 @@
 import { AppController } from './AppController.js';
+import Shop from '../shop/shop.js';
+
 
 var myAppControl = {}
 
@@ -55,7 +57,9 @@ function startLogin() {
 
 
 function renderCanvas(){
+
     fetchGetInfoUser()
+
     const body = document.getElementById('body')
     const div = document.createElement('div')
     div.id = 'root-ui'
